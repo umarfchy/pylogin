@@ -1,22 +1,11 @@
 #Saving email id and pass word for login
-# class RegInfo():
-#     def __init__():
-#         #make a empty dictionary at first if the obj is not empty
-#         pass
-# reginfo = reginfo
-# if reginfo.pickle in
-
-# try:
-#     monday=pickle.load(open("roombooking.bin","rb"))
-# except EOFError:
-#     monday = []
-
 import pickle
 import os
+import hashlib
 
 database_file = './db/reginfo.txt'
 
-#in case of opening first time or absent database file
+#in case of opening for the first time or absent database file
 if not os.path.isfile(database_file):
     db_dict = {}
     pickle_out = open(database_file, 'wb')
@@ -37,7 +26,8 @@ def add_user():
         return
 
     _username = input('Enter your username: \t')
-    _password = input('Enter your password: \t')
+    _password = pycryp(input('Enter your password: \t'))
+
     db_dict[_email] = (_username, _password)
 
     #Saving the object for later reference
@@ -53,10 +43,14 @@ def show_users():
 
 
 # Encryption mechanism
-# function => Encryption; arg => password
+def pycryp(password):
+    salt = os.urandom(32)  # A new salt for this user
+    key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
+    return (salt, key)
+
 
 add_user()
 print('Successfully Registered')
 
-print('Showing Subscriber')
+print('Showing Subscribers')
 show_users()
